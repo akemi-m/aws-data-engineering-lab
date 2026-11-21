@@ -1,0 +1,23 @@
+
+# Terraform local files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+*.tfplan
+*.tfbackend
+
+# Terraform crash logs
+crash.log
+crash.*.log
+
+# Credentials
+.env
+.env.*
+
+# Local overrides
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
