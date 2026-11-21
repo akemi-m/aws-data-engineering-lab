@@ -275,3 +275,75 @@ O conteúdo desta seção é apenas um **modelo de consulta**, não uma etapa ex
 **Evidências:** Pendentes.
 
 ---
+
+### 2026-11-21 — Etapa 5: Primeira ingestão de dados no S3
+
+**Status:** Pendente de validação prática
+
+#### O que implementamos
+
+Preparamos um gerador Python para criar quatro datasets sintéticos
+(clientes, produtos, pedidos e pagamentos) e um processo de upload
+pela AWS CLI para a camada RAW do Data Lake.
+
+#### Conceitos aprendidos
+
+**1. Separação entre infraestrutura e processamento**
+
+O Terraform gerencia os recursos AWS, enquanto Python e AWS CLI
+realizam operações com os dados.
+
+Essa separação permite executar novas cargas sem modificar a
+infraestrutura ou o Terraform State.
+
+**2. Ingestão batch**
+
+Os arquivos CSV são carregados em lotes, sem necessidade de
+processamento em tempo real.
+
+Esse padrão é apropriado quando a origem disponibiliza arquivos
+periodicamente e a latência de segundos não é necessária.
+
+**3. Objetos e metadados S3**
+
+Cada arquivo enviado possui uma chave, tamanho, data de modificação
+e informações de armazenamento e criptografia.
+
+**4. Identificadores e relacionamentos**
+
+Os datasets possuem identificadores para relacionar clientes,
+produtos, pedidos e pagamentos. Isso permitirá praticar JOINs
+e agregações no Athena.
+
+#### Decisões de arquitetura
+
+- Utilizar dados sintéticos para evitar exposição de dados pessoais.
+- Preservar os arquivos CSV originais na camada RAW.
+- Manter o Terraform responsável somente pela infraestrutura.
+- Utilizar AWS CLI para a primeira carga, antes de automatizá-la.
+
+#### Pontos importantes para a certificação DEA-C01
+
+- **S3 não é um banco de dados relacional:** armazenar CSVs não
+  significa disponibilizar automaticamente tabelas SQL.
+- **Batch versus streaming:** batch é apropriado para cargas
+  periódicas; streaming atende necessidades de menor latência.
+- **SSE-S3:** novos objetos recebem criptografia gerenciada pelo S3.
+- **IAM:** operações de leitura, escrita e listagem exigem
+  permissões apropriadas.
+- **RAW:** manter dados originais facilita auditoria e reprocessamento.
+
+#### Validação prática
+
+- [ ] Quatro CSVs gerados localmente.
+- [ ] Upload dos quatro arquivos concluído.
+- [ ] Arquivos encontrados no Console S3.
+- [ ] Criptografia SSE-S3 verificada.
+- [ ] `terraform plan` sem alterações.
+
+**Custo observado:** A verificar no Billing.
+
+**Evidências:** Saídas da AWS CLI e capturas do Console S3.
+
+**Próxima etapa:** Catalogação dos dados com AWS Glue Data Catalog
+e consultas SQL utilizando Amazon Athena.

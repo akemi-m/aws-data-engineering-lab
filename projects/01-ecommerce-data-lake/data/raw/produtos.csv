@@ -1,0 +1,5 @@
+produto_id,nome,categoria,preco
+101,Notebook,Eletronicos,3500.0
+102,Mouse,Eletronicos,80.0
+103,Cadeira,Escritorio,900.0
+104,Mesa,Escritorio,650.0
